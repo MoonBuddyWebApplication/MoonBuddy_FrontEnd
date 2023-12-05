@@ -23,6 +23,10 @@ const router = createBrowserRouter([
     element: <Community />,
   },
   {
+    path: "/com/:id",
+    element: <CommunityMini />,
+  },
+  {
     path: "/login",
     element: <Login />,
   },
@@ -51,10 +55,7 @@ const router = createBrowserRouter([
     path: "/mypage",
     element: <MyPage />,
   },
-  {
-    path: "/comchat",
-    element: <CommunityMini />,
-  },
+
   {
     path: "/modifyme",
     element: <ModifyMe />,

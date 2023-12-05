@@ -77,28 +77,13 @@ const Finder = styled.div`
 `;
 
 export default function Login() {
-  // React.useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await login();
-  //       console.log("응답 데이터:", response.data);
-  //       // 로그인 성공 후 필요한 작업 수행
-  //     } catch (error) {
-  //       // 에러 처리
-  //       // console.error("로그인 실패:", error);
-  //       console.error("에러 발생:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
   const [userId, setUserId] = useState("");
   const handleIdChange = (e) => {
     setUserId(e.target.value);
   };
   const [userPw, setUserPw] = useState("");
   const handlePwChange = (e) => {
-    setUserId(e.target.value);
+    setUserPw(e.target.value);
   };
   return (
     <div>

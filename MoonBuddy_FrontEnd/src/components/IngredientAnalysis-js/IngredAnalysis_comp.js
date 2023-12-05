@@ -1,32 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import NavigatorMain from "../Main-js/Navigator_main";
 import Navitgator1 from "../Main-js/Navitgator1";
 import style from "../css/IngredientAnalysis.module.css";
 import style2 from "../css/ReviewComment.module.css";
 import { AiOutlineShareAlt } from "react-icons/ai";
-import { Modal, Box, Button, Typography } from '@mui/material';
-import ReviewComment from './ReviewComment';
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { product_id } from '../Api/api';
+import { Modal, Box, Button, Typography } from "@mui/material";
+import ReviewComment from "./ReviewComment";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { product_id } from "../Api/api";
+import axios from "axios";
 
 // import axios from 'axios';
 import { useParams } from "react-router-dom";
 
 //[인증마크]모달 스타일 설정
 const ModalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-30%, -30%)',
-    width: 500,
-    bgcolor: 'background.paper',
-    border: '3px solid #6E00FD',
-    boxShadow: 10,
-    p: 6,
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-30%, -30%)",
+  width: 500,
+  bgcolor: "background.paper",
+  border: "3px solid #6E00FD",
+  boxShadow: 10,
+  p: 6,
 };
-
 const ModalComponent = ({ data, open, onClose }) => {
     return (
         <>
@@ -52,16 +52,21 @@ const ModalComponent = ({ data, open, onClose }) => {
     );
 };
 const IngrediList = ({ ingredients, handleOpen }) => {
-    return ingredients.map((ingredient, index) => (
-        <div style={{ borderBottom: '1px solid' }}>
-            <div key={index} className={style.btn_Ingredi} onClick={() => handleOpen(index)}>
-                {ingredient.title}
-            </div >
-        </div>
-    ));
+  return ingredients.map((ingredient, index) => (
+    <div style={{ borderBottom: "1px solid" }}>
+      <div
+        key={index}
+        className={style.btn_Ingredi}
+        onClick={() => handleOpen(index)}
+      >
+        {ingredient.title}
+      </div>
+    </div>
+  ));
 };
 
 const IngredientAnalysis = () => {
+
     const [openModal, setOpenModal] = useState(false);
     const [currentModalIndex, setCurrentModalIndex] = useState(0);
 
@@ -93,6 +98,9 @@ const IngredientAnalysis = () => {
         getData();
     }, []);
 
+  const [INopenModal, INsetOpenModal] = useState(false);
+  const [INModalIndex, setINModalIndex] = useState(0);
+
 
     const getData = async () => {
         const response = await product_id(detail);
@@ -107,25 +115,42 @@ const IngredientAnalysis = () => {
     // const [comments, setComments] = useState();
     // const [parentId, setParentId] = useState("");
 
-    // const getCommentList = async () => {
-    //     console.log("?");
+  useEffect(() => {
+    getData();
+  }, []);
 
-    //     const resp = await axios.get(
-    //         `Get url 필요`,
-    //         {
-    //             withCredentials: true,
-    //         }
-    //     );
-    //     setComments(resp.data); // posts에 data 할당
-    //     console.log(comments);
-    //     console.log("resp", resp.data);
-    // };
+  const getData = async () => {
+    const response = await product_id(detail); //해당id값을 어케 받을지 고민
+    setRes(response);
+  };
+  console.log(res?.data); //옵셔널 체이닝
+  const A = res?.data || [];
+  const [inputText, setText] = useState("");
 
-    // useEffect(() => {
-    //     getCommentList(); // 1) feed 조회 함수 호출
-    // }, []);
+  const handleTextChange = (e) => {
+    setText(e.target.value);
+  };
 
-    // axios.defaults.withCredentials = true;
+  //   const firstData = res?.data[0];
+  //   const Data = res?.data;
+  //   console.log(firstData);
+  const PostBtn = () => {
+    axios
+      .post(
+        "https://port-0-moonbuddy-spring-euegqv2lloic2m5c.sel5.cloudtype.app/review/post",
+        {
+          userId: 0,
+          boardId: 1,
+          comment: inputText,
+        }
+      )
+      .then((res) => {
+        console.log("성공");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }; // api.get 자체가 동기코드
 
     // const createComment = async (content) => {
     //     console.log("parentId", {
@@ -231,67 +256,52 @@ const IngredientAnalysis = () => {
                         </div>
                     </div>
                 </div>
-            </div >
-            {/* 제품 특징 & 리뷰 파트 */}
-            < div className={style.BottomArea_FeatureAndReivew} >
-                <Tabs
-                    defaultActiveKey="home"
-                    id="Tabs"
-                    className={style.Tabs}
-                    justify
-                    style={{ fontFamily: '"Aoboshi One", serif', marginBottom: '2rem' }}
-                >
-                    <Tab eventKey="home" title="특징">
-                        <img src={A.product_info_image} />
-                    </Tab>
-                    <Tab eventKey="profile" title="리뷰">
-                        {/* <div className={style2.commentList}>
-                            <hr className={style2.h2} />
-                            {comments?.map((c) => {
-                                return (
-                                    <div
-                                        style={{
-                                            marginTop: "28px",
-                                        }}
-                                    >
-                                        <ReviewComment
-                                            parentId={parentId}
-                                            setParentId={setParentId}
-                                            {...c}
-                                        ></ReviewComment>
-                                        <div
-                                            style={{
-                                                marginLeft: "69px",
-                                                marginTop: "28px",
-                                            }}
-                                        >
-                                            {c.children.map((rC) => {
-                                                return <ReviewComment {...rC}></ReviewComment>;
-                                            })}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div className={style2.commentBox}>
-                            <input
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        createComment(content);
-                                    }
-                                }}
-                                onChange={(e) => setContent(e.target.value)}
-                                placeholder="댓글 달기"
-                                className={style2.commentInput}
-                            ></input>
-                            <div className={style2.margin_div}></div>
-                        </div> */}
-                    </Tab>
-                </Tabs>
-
-            </div >
-        </div >
-    );
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* 제품 특징 & 리뷰 파트 */}
+      <div className={style.BottomArea_FeatureAndReivew}>
+        <Tabs
+          defaultActiveKey="home"
+          id="Tabs"
+          className={style.Tabs}
+          justify
+          style={{ fontFamily: '"Aoboshi One", serif', marginBottom: "2rem" }}
+        >
+          <Tab eventKey="home" title="특징">
+            <img src={A.product_info_image} />
+          </Tab>
+          <Tab eventKey="profile" title="리뷰">
+            {" "}
+            {A && (
+              <div className="replyGet">
+                {A.reviewList?.map((varId) => (
+                  <div key={varId.id}>
+                    <div className="nickGet">{varId}</div>
+                    <div>{varId}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="replyInput">
+              <div className="nick">유저 닉네임</div>
+              <input
+                type="text"
+                placeholder="댓글을 입력해주세요"
+                value={inputText}
+                onChange={handleTextChange}
+              ></input>
+              <div className="registerBtn">
+                <button onClick={PostBtn}>등록</button>
+              </div>
+            </div>
+          </Tab>
+        </Tabs>
+      </div>
+    </div>
+  );
 };
 
 export default IngredientAnalysis;

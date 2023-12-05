@@ -3,10 +3,12 @@ import styled from "styled-components";
 import ChatComponent from "../components/Com-js/ChatComponent";
 import { boardGet } from "../components/Api/api";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Navigator1 from "../components/Main-js/Navitgator1";
 export default function Community() {
   const [res, setRes] = useState();
+  const { id } = useParams(); // 2. useParams 사용
   const LittleNav = styled.div`
     @import url("https://fonts.googleapis.com/css2?family=Aoboshi+One&family=Gugi&family=Noto+Serif+KR:wght@200&display=swap");
     font-family: "Aoboshi One", serif;
@@ -63,11 +65,11 @@ export default function Community() {
         <div>{arrayLen}개의 게시물 </div>
       </LittleNav>
       <LinkDiv>
-        <Link to="/comchat">
-          {res?.data.map((idx) => (
-            <ChatComponent props={idx} />
-          ))}
-        </Link>
+        {res?.data.map((post) => (
+          <Link key={post.boardId} to={`/com/${post.boardId}`}>
+            <ChatComponent key={post.boardId} props={post} />
+          </Link>
+        ))}
       </LinkDiv>
     </div>
   );

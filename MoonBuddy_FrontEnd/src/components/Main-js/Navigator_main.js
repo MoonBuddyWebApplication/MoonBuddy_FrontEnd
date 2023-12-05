@@ -5,11 +5,13 @@ const NavigatorMain = () => {
   return (
     <div className={styles.nav}>
       <div className={styles.container}>
-        <img
-          src={process.env.PUBLIC_URL + "/imgs/Moonbuddy_logo.png"}
-          className={styles.logo}
-          alt="Moonbuddy_logo"
-        ></img>
+        <Link to="/">
+          <img
+            src={process.env.PUBLIC_URL + "/imgs/Moonbuddy_logo.png"}
+            className={styles.logo}
+            alt="Moonbuddy_logo"
+          ></img>
+        </Link>
         <div className={styles.menu_bar}>
           <Link to="/" className={styles.links}>
             문버디
